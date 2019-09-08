@@ -10,11 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.qoobico.remindme.fragment.BaseFragment;
-import com.qoobico.remindme.fragment.BirthdaysFragment;
 import com.qoobico.remindme.fragment.FragmentFactory;
-import com.qoobico.remindme.fragment.HistoryFragment;
-import com.qoobico.remindme.fragment.IdeasFragment;
-import com.qoobico.remindme.fragment.TodoFragment;
 
 import static com.qoobico.remindme.Constants.BIRTHDAYS;
 import static com.qoobico.remindme.Constants.HISTORY;
