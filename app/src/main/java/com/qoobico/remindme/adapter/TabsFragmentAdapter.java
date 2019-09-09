@@ -9,8 +9,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.qoobico.remindme.dto.RemindDTO;
 import com.qoobico.remindme.fragment.BaseFragment;
-import com.qoobico.remindme.fragment.FragmentFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.qoobico.remindme.Constants.BIRTHDAYS;
 import static com.qoobico.remindme.Constants.HISTORY;
@@ -20,12 +23,13 @@ import static com.qoobico.remindme.Constants.TODO;
 public class TabsFragmentAdapter extends FragmentPagerAdapter {
 
     private SparseArray<BaseFragment> tabs = new SparseArray<>();
-    private Context context;
+
+    private List<RemindDTO> data;
 
     public TabsFragmentAdapter(Context context, @NonNull FragmentManager fm) {
-        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        this.context = context;
-        initTabsMap();
+        super(fm);
+        this.data = new ArrayList<>();
+        initTabsMap(context);
     }
 
     @Nullable
@@ -47,10 +51,16 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
         return tabs.size();
     }
 
-    private void initTabsMap() {
-        tabs.put(0, FragmentFactory.getInstance(context, HISTORY));
-        tabs.put(1, FragmentFactory.getInstance(context, IDEAS));
-        tabs.put(2, FragmentFactory.getInstance(context, TODO));
-        tabs.put(3, FragmentFactory.getInstance(context, BIRTHDAYS));
+    public void setData(List<RemindDTO> data) {
+        this.data = data;
+        for (int i = 0; i < tabs.size(); i++)
+            tabs.valueAt(i).refreshData(data);
+    }
+
+    private void initTabsMap(Context context) {
+        tabs.put(0, new BaseFragment(context, HISTORY, data));
+        tabs.put(1, new BaseFragment(context, IDEAS, data));
+        tabs.put(2, new BaseFragment(context, TODO, data));
+        tabs.put(3, new BaseFragment(context, BIRTHDAYS, data));
     }
 }

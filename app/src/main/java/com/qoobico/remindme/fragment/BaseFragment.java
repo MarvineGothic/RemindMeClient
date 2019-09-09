@@ -16,46 +16,38 @@ import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.RemindListAdapter;
 import com.qoobico.remindme.dto.RemindDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BaseFragment extends Fragment {
     private int layout;
-    private View view;
     private String title;
     private Context context;
+    private RemindListAdapter adapter;
+
+    public BaseFragment(Context context, int[] fragment_data, List<RemindDTO> data) {
+        Bundle args = new Bundle();
+
+        adapter = new RemindListAdapter(data);
+        this.setArguments(args);
+        this.context = context;
+        this.layout = fragment_data[0];
+        this.title = context.getString(fragment_data[1]);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(layout, container, false);
+        View view = inflater.inflate(layout, container, false);
+
         RecyclerView recyclerView = view.findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new RemindListAdapter(createMockRemindListData()));
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
-    /**
-     * Mock method
-     * @return
-     */
-    private List<RemindDTO> createMockRemindListData() {
-        List<RemindDTO> data = new ArrayList<>();
-        for (int i = 0; i < 6; i++)
-            data.add(new RemindDTO("Item " + i));
-        return data;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setLayout(int layout) {
-        this.layout = layout;
+    public void refreshData(List<RemindDTO> data) {
+            adapter.setData(data);
+            adapter.notifyDataSetChanged();
     }
 
     public String getTitle() {

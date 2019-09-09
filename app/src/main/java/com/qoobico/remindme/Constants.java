@@ -10,4 +10,15 @@ public class Constants {
     public static final int[] IDEAS = {R.layout.fragment_ideas, R.string.menu_item_ideas};
     public static final int[] TODO = {R.layout.fragment_todo, R.string.menu_item_todo};
     public static final int[] BIRTHDAYS = {R.layout.fragment_birthdays, R.string.menu_item_birthdays};
+
+    public static class URL{
+        public static final String HOST = "http://192.168.1.178:8080/";
+        public static final String GET_REMIND_ITEM = HOST + "reminders";
+
+    }
 }
+
+// 169.254.67.226
+// 192.168.1.178
+// 192.168.56.1
+// 169.254.120.171
