@@ -1,8 +1,8 @@
 package com.qoobico.remindme;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,24 +12,21 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
-import com.qoobico.remindme.dto.RemindDTO;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.qoobico.remindme.rest_api.RestAsync;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_main;
+    public static TabsFragmentAdapter tabsFragmentAdapter;
     private Toolbar toolbar;
-    private static TabsFragmentAdapter adapter;
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
+
+    private int id = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         initToolBar();
         initNavigationView();
+        initFloatingActionButton();
         initTabs();
     }
 
@@ -52,18 +50,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         toolbar.inflateMenu(R.menu.menu);
-    }
-
-    private void initTabs() {
-        viewPager = findViewById(R.id.view_pager);
-        adapter = new TabsFragmentAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-
-        new RemindMeTask().execute();
-
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-
     }
 
     private void initNavigationView() {
@@ -82,51 +68,65 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.actionNotificationItem:
                         showNotificationTab();
+                        break;
+                    case R.id.actionBookmarksItem:
+                        showBookmarksTab();
+                        break;
+                    case R.id.actionHistoryItem:
+                        showHistoryTab();
+                        break;
+                    case R.id.actionSettingsItem:
+                        showSettingsTab();
+                        break;
+                    case R.id.actionAboutItem:
+                        showAboutTab();
+                        break;
                 }
                 return false;
             }
         });
     }
 
-    private void showNotificationTab() {
-        viewPager.setCurrentItem(Constants.TAB_TWO);
+    private void initFloatingActionButton() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new RestAsync().sendData("{\"id\":" + id + ",\"title\":\"First reminder" + id + "\",\"remindDate\":1568035941094}");
+                id++;
+            }
+        });
     }
 
-    private static class RemindMeTask extends AsyncTask<Void, Void, List<RemindDTO>> {
-        @Override
-        protected List<RemindDTO> doInBackground(Void... voids) {
-            List<RemindDTO> remindDTOS = new ArrayList<>();
-            HttpJsonParser parser = new HttpJsonParser();
-            JSONArray response = parser.makeHttpRequest(Constants.URL.GET_REMIND_ITEM, "GET", null);
+    private void initTabs() {
+        viewPager = findViewById(R.id.view_pager);
+        tabsFragmentAdapter = new TabsFragmentAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(tabsFragmentAdapter);
 
-            try {
-                for (int i = 0; i < response.length(); i++) {
-                    remindDTOS.add(new RemindDTO(response.getJSONObject(i)));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        new RestAsync().getData();
 
-            return remindDTOS;
-        }
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
 
-        @Override
-        protected void onPostExecute(List<RemindDTO> remindDTOS) {
-            adapter.setData(remindDTOS);
-        }
+    }
 
-        /*@Override
-        protected RemindDTO doInBackground(Void... voids) {
-            RestTemplate template = new RestTemplate();
-            template.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            return template.getForObject(Constants.URL.GET_REMIND_ITEM, RemindDTO.class);
-        }
+    private void showNotificationTab() {
+        viewPager.setCurrentItem(Constants.HISTORY[0]);
+    }
 
-        @Override
-        protected void onPostExecute(RemindDTO remindDTO) {
-            List<RemindDTO> list = new ArrayList<>();
-            list.add(remindDTO);
-            adapter.setData(list);
-        }*/
+    private void showBookmarksTab() {
+        viewPager.setCurrentItem(Constants.TODO[0]);
+    }
+
+    private void showHistoryTab() {
+        viewPager.setCurrentItem(Constants.BIRTHDAYS[0]);
+    }
+
+    private void showSettingsTab() {
+        viewPager.setCurrentItem(Constants.IDEAS[0]);
+    }
+
+    private void showAboutTab() {
+        viewPager.setCurrentItem(Constants.HISTORY[0]);
     }
 }

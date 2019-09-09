@@ -1,19 +1,17 @@
 package com.qoobico.remindme;
 
 public class Constants {
-    public static final int TAB_ONE = 0;
-    public static final int TAB_TWO = 1;
-    public static final int TAB_THREE = 2;
-    public static final int TAB_FOUR = 3;
 
-    public static final int[] HISTORY = {R.layout.fragment_history, R.string.menu_item_history};
-    public static final int[] IDEAS = {R.layout.fragment_ideas, R.string.menu_item_ideas};
-    public static final int[] TODO = {R.layout.fragment_todo, R.string.menu_item_todo};
-    public static final int[] BIRTHDAYS = {R.layout.fragment_birthdays, R.string.menu_item_birthdays};
+    public static final int[] HISTORY = {0, R.layout.fragment_history, R.string.menu_item_history};
+    public static final int[] IDEAS = {1, R.layout.fragment_ideas, R.string.menu_item_ideas};
+    public static final int[] TODO = {2, R.layout.fragment_todo, R.string.menu_item_todo};
+    public static final int[] BIRTHDAYS = {3, R.layout.fragment_birthdays, R.string.menu_item_birthdays};
 
-    public static class URL{
+    public static class URL {
         public static final String HOST = "http://192.168.1.178:8080/";
         public static final String GET_REMIND_ITEM = HOST + "reminders";
+        public static final String POST_REMIND_ITEM = HOST + "reminders";
+        public static final String DELETE_REMIND_ITEM = HOST + "reminders/";
 
     }
 }

@@ -30,8 +30,8 @@ public class BaseFragment extends Fragment {
         adapter = new RemindListAdapter(data);
         this.setArguments(args);
         this.context = context;
-        this.layout = fragment_data[0];
-        this.title = context.getString(fragment_data[1]);
+        this.layout = fragment_data[1];
+        this.title = context.getString(fragment_data[2]);
     }
 
     @Nullable

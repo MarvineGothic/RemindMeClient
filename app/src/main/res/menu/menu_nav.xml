@@ -3,9 +3,33 @@
 
     <item
         android:id="@+id/actionNotificationItem"
-        android:icon="@mipmap/ic_message_bulleted"
+        android:icon="@mipmap/ic_message_bulleted_black_24dp"
         android:orderInCategory="1"
         android:title="@string/menu_item_notification" />
+
+    <item
+        android:id="@+id/actionBookmarksItem"
+        android:icon="@mipmap/ic_star_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_bookmarks" />
+
+    <item
+        android:id="@+id/actionHistoryItem"
+        android:icon="@mipmap/ic_package_down_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_history" />
+
+    <item
+        android:id="@+id/actionSettingsItem"
+        android:icon="@mipmap/ic_settings_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_settings" />
+
+    <item
+        android:id="@+id/actionAboutItem"
+        android:icon="@mipmap/ic_information_black_24dp"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_about" />
 
 
 </menu>

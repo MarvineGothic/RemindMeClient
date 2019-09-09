@@ -9,10 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.qoobico.remindme.MainActivity;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.dto.RemindDTO;
+import com.qoobico.remindme.rest_api.RestAsync;
 
 import java.util.List;
+
+import static com.qoobico.remindme.Constants.URL.DELETE_REMIND_ITEM;
 
 public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.RemindViewHolder> {
 
@@ -33,6 +37,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
     public void onBindViewHolder(@NonNull RemindViewHolder holder, int position) {
         RemindDTO remindDTO = data.get(position);
         holder.title.setText(remindDTO.getTitle());
+        holder.id.setText(String.valueOf(remindDTO.getId()));
     }
 
     @Override
@@ -48,12 +53,21 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
 
         CardView cardView;
         TextView title;
+        TextView id;
 
-        public RemindViewHolder(@NonNull View itemView) {
+        public RemindViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             cardView = itemView.findViewById(R.id.card_view);
             title = itemView.findViewById(R.id.title);
+            id = itemView.findViewById(R.id.id);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new RestAsync().deleteData(DELETE_REMIND_ITEM + id.getText());
+                }
+            });
         }
     }
 }
