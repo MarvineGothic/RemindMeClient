@@ -1,4 +1,4 @@
-package com.qoobico.remindme;
+package com.qoobico.remindme.rest_api;
 
 import android.net.Uri;
 import android.util.Log;
@@ -32,8 +32,7 @@ public class HttpJsonParser {
      * @param params Query parameters for the request
      * @return This method returns the JSON object fetched from the server
      */
-    public JSONArray makeHttpRequest(String url, String method,
-                                      Map<String, String> params) {
+    public JSONArray makeHttpRequest(String url, String method, Map<String, String> params) {
 
         try {
             Uri.Builder builder = new Uri.Builder();

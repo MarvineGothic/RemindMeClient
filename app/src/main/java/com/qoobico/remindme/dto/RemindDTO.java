@@ -1,17 +1,13 @@
 package com.qoobico.remindme.dto;
 
-import android.text.format.DateFormat;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class RemindDTO {
     private long id;
+    private String tab_name;
     private String title;
     private Date remindDate;
 
@@ -23,8 +19,10 @@ public class RemindDTO {
     }
 
     public RemindDTO(JSONObject jsonObject) {
+        System.out.println("new DTO");
         try {
             this.id = jsonObject.getInt("id");
+            this.tab_name = jsonObject.getString("tab_name");
             this.title = jsonObject.getString("title");
             this.remindDate = new Date(jsonObject.getLong("remindDate"));
         } catch (JSONException e) {
@@ -39,6 +37,14 @@ public class RemindDTO {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getTab_name() {
+        return tab_name;
+    }
+
+    public void setTab_name(String tab_name) {
+        this.tab_name = tab_name;
     }
 
     public Date getRemindDate() {

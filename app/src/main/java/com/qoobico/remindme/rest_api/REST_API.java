@@ -1,10 +1,10 @@
-package com.qoobico.remindme;
+package com.qoobico.remindme.rest_api;
 
 import com.qoobico.remindme.dto.RemindDTO;
+import com.qoobico.remindme.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.springframework.http.MediaType;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qoobico.remindme.Constants.URL.POST_REMIND_ITEM;
+import static com.qoobico.remindme.utils.Constants.URL.POST_REMIND_ITEM;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class REST_API {
@@ -48,6 +48,7 @@ public class REST_API {
             }
     }
     public static List<RemindDTO> GET(){
+        System.out.println(" get item ");
         List<RemindDTO> remindDTOS = new ArrayList<>();
         HttpJsonParser parser = new HttpJsonParser();
         JSONArray response = parser.makeHttpRequest(Constants.URL.GET_REMIND_ITEM, "GET", null);

@@ -10,39 +10,35 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.qoobico.remindme.dto.RemindDTO;
-import com.qoobico.remindme.fragment.BaseFragment;
+import com.qoobico.remindme.fragment.TabFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qoobico.remindme.Constants.BIRTHDAYS;
-import static com.qoobico.remindme.Constants.HISTORY;
-import static com.qoobico.remindme.Constants.IDEAS;
-import static com.qoobico.remindme.Constants.TODO;
-
 public class TabsFragmentAdapter extends FragmentPagerAdapter {
 
-    private SparseArray<BaseFragment> tabs = new SparseArray<>();
+    private Context context;
+    private SparseArray<TabFragment> tabs = new SparseArray<>();
 
     private List<RemindDTO> data;
 
     public TabsFragmentAdapter(Context context, @NonNull FragmentManager fm) {
         super(fm);
+        this.context = context;
         this.data = new ArrayList<>();
-        initTabsMap(context);
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        BaseFragment fragment = tabs.get(position);
-        return fragment == null ? "" : fragment.getTitle();
+        TabFragment fragment = tabs.get(position);
+        return fragment == null ? "" : fragment.getTabTitle();
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        BaseFragment fragment = tabs.get(position);
+        TabFragment fragment = tabs.get(position);
         return fragment == null ? new Fragment() : fragment;
     }
 
@@ -57,10 +53,9 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
             tabs.valueAt(i).refreshData(data);
     }
 
-    private void initTabsMap(Context context) {
-        tabs.put(0, new BaseFragment(context, HISTORY, data));
-        tabs.put(1, new BaseFragment(context, IDEAS, data));
-        tabs.put(2, new BaseFragment(context, TODO, data));
-        tabs.put(3, new BaseFragment(context, BIRTHDAYS, data));
+    public TabsFragmentAdapter initTabsMap(int[]... tabsID) {
+        for (int i = 0; i < tabsID.length; i++)
+            tabs.put(i, new TabFragment(this.context, tabsID[i], data));
+        return this;
     }
 }
