@@ -9,8 +9,12 @@ public class Constants {
 
     public static final int ACTIVITY_MAIN_LAYOUT = R.layout.activity_main;
     public static final int ACTIVITY_ADD_REMINDER_LAYOUT = R.layout.activity_add_reminder;
-    public static final int DRAWER_LAYOUT = R.id.drawer_layout;
+    public static final int REMINDER_TYPE_ITEM_LAYOUT = R.layout.reminder_type_item_layout;
     public static final int REMIND_ITEM_LAYOUT = R.layout.remind_item;
+
+    public static final int DRAWER_LAYOUT = R.id.drawer_layout;
+    public static final int TITLE_INPUT = R.id.title_input;
+    public static final int REMINDER_TYPE_INPUT = R.id.reminder_type_input;
 
     public static final int TOOL_BAR_ID = R.id.toolbar;
     public static final int NAVIGATION_ID = R.id.navigation;
@@ -19,15 +23,19 @@ public class Constants {
     public static final int CHECK_ID = R.id.check;
     public static final int VIEW_PAGER_ID = R.id.view_pager;
     public static final int TAB_LAYOUT_ID = R.id.tab_layout;
-    public static final int CARD_VIEW_ID = R.id.card_view;
-    public static final int VIEW_TITLE_ID = R.id.title;
-    public static final int VIEW_TAB_ID = R.id.tab_id;
-    public static final int VIEW_ID_ID = R.id.id;
+
     public static final int RECYCLER_VIEW_ID = R.id.recycleView;
+
+    public static final int CARD_VIEW_ID = R.id.card_view;
+    public static final int REMINDER_ID = R.id.reminder_id;
+    public static final int REMINDER_TITLE = R.id.reminder_title;
+    public static final int REMINDER_TYPE = R.id.reminder_type;
+    public static final int REMINDER_DATE = R.id.reminder_date;
 
     public static final int MENU = R.menu.menu;
     public static final int MENU_ADD_REMINDER = R.menu.menu_add_reminder;
-    public static final int DEFAULT_STYLE = R.style.AppDefault;
+    public static final int DEFAULT_THEME = R.style.AppDefault;
+    public static final int REMINDER_FORM_THEME = R.style.ReminderFormTheme;
 
     public static final int APP_NAME = R.string.app_name;
     public static final int ADD_REMINDER_NAME = R.string.add_reminder_name;
@@ -38,6 +46,8 @@ public class Constants {
     public static final int[] IDEAS = {1, R.layout.fragment_ideas, R.string.menu_item_ideas};
     public static final int[] TODO = {2, R.layout.fragment_todo, R.string.menu_item_todo};
     public static final int[] BIRTHDAYS = {3, R.layout.fragment_birthdays, R.string.menu_item_birthdays};
+    public static final int[] HOLIDAYS = {4, R.layout.fragment_birthdays, R.string.menu_item_holidays};
+    public static final int[][] TABS = {ALL_REMINDERS, IDEAS, TODO, BIRTHDAYS, HOLIDAYS};
 
     public static class URL {
         public static final String HOST = "http://192.168.0.11:8080/";

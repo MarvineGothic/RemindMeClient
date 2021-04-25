@@ -15,8 +15,12 @@
     <string name="menu_item_ideas">IDEAS</string>
     <string name="menu_item_todo">TODO</string>
     <string name="menu_item_birthdays">BIRTHDAYS</string>
+    <string name="menu_item_holidays">HOLIDAYS</string>
 
     <string name="view_navigation_open">Open</string>
     <string name="view_navigation_close">Close</string>
+
+    <string name="title_input_label">Title</string>
+    <string name="reminder_type_input_label">Reminder Type</string>
 
 </resources>

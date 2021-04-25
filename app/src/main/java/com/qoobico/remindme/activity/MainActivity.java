@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(DEFAULT_STYLE);
+        setTheme(DEFAULT_THEME);
         super.onCreate(savedInstanceState);
 
         setContentView(ACTIVITY_MAIN_LAYOUT);
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                System.out.println("Clicked menu Item");
                 return false;
             }
         });
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("Open add activity reminder");
                 /*new RestAsync().sendData("{\"id\":" + id + ",\"title\":\"First reminder" + id + "\",\"remindDate\":1568035941094}");
                 id++;*/
                 Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
@@ -106,15 +108,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void initTabs() {
         viewPager = findViewById(VIEW_PAGER_ID);
-        tabsFragmentAdapter = new TabsFragmentAdapter(this, getSupportFragmentManager()).
-                initTabsMap(ALL_REMINDERS, IDEAS, TODO, BIRTHDAYS);
+        tabsFragmentAdapter = new TabsFragmentAdapter(MainActivity.this, getSupportFragmentManager()).
+                initTabsMap(TABS);
         viewPager.setAdapter(tabsFragmentAdapter);
 
         new RestAsync().getData();
 
         TabLayout tabLayout = findViewById(TAB_LAYOUT_ID);
         tabLayout.setupWithViewPager(viewPager);
-
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private void showNotificationTab() {

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -35,18 +36,9 @@ public class HttpJsonParser {
     public JSONArray makeHttpRequest(String url, String method, Map<String, String> params) {
 
         try {
-            Uri.Builder builder = new Uri.Builder();
             URL urlObj;
-            String encodedParams = "";
-            if (params != null) {
-                for (Map.Entry<String, String> entry : params.entrySet()) {
-                    builder.appendQueryParameter(entry.getKey(), entry.getValue());
-                }
-            }
-            if (builder.build().getEncodedQuery() != null) {
-                encodedParams = "?" + builder.build().getEncodedQuery();
+            String encodedParams = getEncodedParams(params);
 
-            }
             if ("GET".equals(method)) {
                 url = url + encodedParams;
                 urlObj = new URL(url);
@@ -95,5 +87,20 @@ public class HttpJsonParser {
         // return JSON Object
         return jObj;
 
+    }
+
+    public String getEncodedParams(Map<String, String> params) {
+        Uri.Builder builder = new Uri.Builder();
+        String encodedParams = "";
+        if (params != null) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                builder.appendQueryParameter(entry.getKey(), entry.getValue());
+            }
+        }
+        if (builder.build().getEncodedQuery() != null) {
+            encodedParams = "?" + builder.build().getEncodedQuery();
+
+        }
+        return encodedParams;
     }
 }

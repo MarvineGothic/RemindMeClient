@@ -32,7 +32,7 @@ public class TabFragment extends Fragment {
     public TabFragment(Context context, int[] fragment_data, List<RemindDTO> data) {
         Bundle args = new Bundle();
 
-        remindListAdapter = new RemindListAdapter(data);
+        remindListAdapter = new RemindListAdapter(data, context);
         this.setArguments(args);
         this.context = context;
         this.tabLayout = fragment_data[1];
