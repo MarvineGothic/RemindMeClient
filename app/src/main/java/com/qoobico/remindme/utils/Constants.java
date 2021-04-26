@@ -4,6 +4,8 @@ import com.qoobico.remindme.R;
 
 public class Constants {
 
+    public static final boolean MOCK = true;
+    public static final boolean DEBUG = true;
     public static final int MAIN_ACTIVITY_CODE = 1000;
     public static final int ADD_REMINDER_ACTIVITY_CODE = 1001;
 

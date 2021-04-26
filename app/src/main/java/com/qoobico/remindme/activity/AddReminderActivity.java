@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.qoobico.remindme.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +69,10 @@ public class AddReminderActivity extends AppCompatActivity {
      * Adds a new reminder to DB
      */
     private void addReminderItem() {
-        System.out.println("Saving item");
+        Utils.debugLog("Saving item");
         Editable text = titleInputLayout.getEditText().getText();
 
-        System.out.println(text);
+        Utils.debugLog(text);
 //        String tab_name = (String) tabsFragmentAdapter.getPageTitle(viewPager.getCurrentItem());
 //        String item = String.format(Locale.ENGLISH,
 //                "{\"id\":\"0\",\"tab_name\":%s,\"title\":\"First reminder\",\"remindDate\":%d}",

@@ -19,6 +19,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
 import com.qoobico.remindme.rest_api.RestAsync;
+import com.qoobico.remindme.utils.ReminderParser;
+import com.qoobico.remindme.utils.Utils;
 
 import static com.qoobico.remindme.utils.Constants.*;
 
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                System.out.println("Clicked menu Item");
+                Utils.debugLog("Clicked menu Item");
                 return false;
             }
         });
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Open add activity reminder");
+                Utils.debugLog("Open add activity reminder");
                 /*new RestAsync().sendData("{\"id\":" + id + ",\"title\":\"First reminder" + id + "\",\"remindDate\":1568035941094}");
                 id++;*/
                 Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);

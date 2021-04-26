@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.qoobico.remindme.dto.RemindDTO;
 import com.qoobico.remindme.utils.Constants;
+import com.qoobico.remindme.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,9 +65,9 @@ public class RestAsync extends AsyncTask<Void, Void, List<RemindDTO>> {
                 HttpEntity<RemindDTO> request = new HttpEntity<>(new RemindDTO(new JSONObject(jsonString)), headers);
 
                 ResponseEntity<RemindDTO> personResultAsJsonStr = restTemplate.postForEntity(Constants.URL.POST_REMIND_ITEM, request, RemindDTO.class);
-                if (personResultAsJsonStr != null) System.out.println("POST: " + jsonString);
+                if (personResultAsJsonStr != null) Utils.debugLog("POST: " + jsonString);
             } catch (Exception e) {
-                System.out.println(e.toString() + " POST request failed!");
+                Utils.debugLog(e.toString() + " POST request failed!");
             }
 
         if (updateURL != null && jsonString != null) {
