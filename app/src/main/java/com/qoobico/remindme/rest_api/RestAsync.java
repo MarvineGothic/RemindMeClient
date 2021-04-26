@@ -17,7 +17,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.qoobico.remindme.activity.MainActivity.tabsFragmentAdapter;
@@ -83,42 +82,23 @@ public class RestAsync extends AsyncTask<Void, Void, List<RemindDTO>> {
         if (deleteURL != null)
             restTemplate.delete(deleteURL);
 
-//        List<RemindDTO> remindDTOS = new ArrayList<>();
-//        ResponseEntity<Object[]> responseEntity = restTemplate.getForEntity(Constants.URL.GET_REMIND_ITEM, Object[].class);
-//        Object[] objects = responseEntity.getBody();
-//
-//        try {
-//            JSONArray jsonArray = new JSONArray(objects);
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                remindDTOS.add(new RemindDTO(jsonArray.getJSONObject(i)));
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return remindDTOS;
-        return getMockDTOs();
+        List<RemindDTO> remindDTOS = new ArrayList<>();
+        ResponseEntity<Object[]> responseEntity = restTemplate.getForEntity(Constants.URL.GET_REMIND_ITEM, Object[].class);
+        Object[] objects = responseEntity.getBody();
+
+        try {
+            JSONArray jsonArray = new JSONArray(objects);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                remindDTOS.add(new RemindDTO(jsonArray.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return remindDTOS;
     }
 
     @Override
     protected void onPostExecute(List<RemindDTO> remindDTOS) {
         tabsFragmentAdapter.setData(remindDTOS);
-    }
-
-
-    public RemindDTO getMockRemindDTO(Integer id, String tab_name, String title, Date remindDate) {
-        RemindDTO remindDTO = new RemindDTO(title);
-        remindDTO.setId(id);
-        remindDTO.setTab_name(tab_name);
-        remindDTO.setRemindDate(remindDate);
-        return remindDTO;
-    }
-
-    public List<RemindDTO> getMockDTOs(){
-        List<RemindDTO> remindDTOS = new ArrayList<>();
-        remindDTOS.add(getMockRemindDTO(1, "IDEAS", "I have an idea", new Date()));
-        remindDTOS.add(getMockRemindDTO(2, "TODO", "I have something todo", new Date()));
-        remindDTOS.add(getMockRemindDTO(3, "BIRTHDAYS", "I have a BD", new Date()));
-        remindDTOS.add(getMockRemindDTO(4, "IDEAS", "I have another idea", new Date()));
-        return remindDTOS;
     }
 }
