@@ -83,19 +83,10 @@ public class RestAsync extends AsyncTask<Void, Void, List<RemindDTO>> {
         if (deleteURL != null)
             restTemplate.delete(deleteURL);
 
-        List<RemindDTO> remindDTOS = new ArrayList<>();
         ResponseEntity<Object[]> responseEntity = restTemplate.getForEntity(Constants.URL.GET_REMIND_ITEM, Object[].class);
         Object[] objects = responseEntity.getBody();
 
-        try {
-            JSONArray jsonArray = new JSONArray(objects);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                remindDTOS.add(new RemindDTO(jsonArray.getJSONObject(i)));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return remindDTOS;
+        return Utils.getReminders(objects);
     }
 
     @Override
