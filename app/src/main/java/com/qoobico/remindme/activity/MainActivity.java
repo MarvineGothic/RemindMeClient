@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
 import com.qoobico.remindme.rest_api.RestAsync;
-import com.qoobico.remindme.utils.ReminderParser;
+import com.qoobico.remindme.utils.ReminderIO;
 import com.qoobico.remindme.utils.Utils;
 
 import static com.qoobico.remindme.utils.Constants.*;
@@ -27,6 +27,7 @@ import static com.qoobico.remindme.utils.Constants.*;
 public class MainActivity extends AppCompatActivity {
 
     public static TabsFragmentAdapter tabsFragmentAdapter;
+    public static ReminderIO reminderIO;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(ACTIVITY_MAIN_LAYOUT);
+
+        reminderIO = new ReminderIO(this, REMINDERS_DIR);
 
         initToolBar();
         initNavigationView();
@@ -114,7 +117,11 @@ public class MainActivity extends AppCompatActivity {
                 initTabsMap(TABS);
         viewPager.setAdapter(tabsFragmentAdapter);
 
-        new RestAsync().getData();
+        if (MOCK) {
+            reminderIO.getData();
+        } else {
+            new RestAsync().getData();
+        }
 
         TabLayout tabLayout = findViewById(TAB_LAYOUT_ID);
         tabLayout.setupWithViewPager(viewPager);
