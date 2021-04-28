@@ -13,17 +13,17 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.qoobico.remindme.activity.AddReminderActivity;
-import com.qoobico.remindme.activity.MainActivity;
 import com.qoobico.remindme.dto.RemindDTO;
-import com.qoobico.remindme.rest_api.RestAsync;
 
 import java.util.List;
 
-import static com.qoobico.remindme.utils.Constants.*;
-import static com.qoobico.remindme.utils.Constants.URL.DELETE_REMIND_ITEM;
+import static com.qoobico.remindme.utils.Constants.ADD_REMINDER_ACTIVITY_CODE;
+import static com.qoobico.remindme.utils.Constants.CARD_VIEW_ID;
+import static com.qoobico.remindme.utils.Constants.REMINDER_DATE;
 import static com.qoobico.remindme.utils.Constants.REMINDER_ID;
-import static com.qoobico.remindme.utils.Constants.REMINDER_TYPE;
 import static com.qoobico.remindme.utils.Constants.REMINDER_TITLE;
+import static com.qoobico.remindme.utils.Constants.REMINDER_TYPE;
+import static com.qoobico.remindme.utils.Constants.REMIND_ITEM_LAYOUT;
 
 public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.RemindViewHolder> {
 
@@ -82,6 +82,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
                 public void onClick(View view) {
                     System.out.println("Click on: " + id.getText());
 //                    new RestAsync().deleteData(DELETE_REMIND_ITEM + id.getText());
+//                    reminderIO.deleteReminder(Long.parseLong(id.getText().toString()));
                     Intent intent = new Intent(context, AddReminderActivity.class);
                     ((AppCompatActivity) context).startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
                 }
