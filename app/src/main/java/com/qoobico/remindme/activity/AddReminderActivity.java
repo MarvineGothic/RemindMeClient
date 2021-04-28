@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -12,17 +14,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.qoobico.remindme.rest_api.RestAsync;
 import com.qoobico.remindme.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import static com.qoobico.remindme.activity.MainActivity.reminderIO;
 import static com.qoobico.remindme.utils.Constants.*;
 
 public class AddReminderActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextInputLayout titleInputLayout;
     private AutoCompleteTextView reminderTypeInputLayout;
+    private String tab_name;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +70,13 @@ public class AddReminderActivity extends AppCompatActivity {
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, REMINDER_TYPE_ITEM_LAYOUT, items);
         reminderTypeInputLayout.setAdapter(adapter);
+        reminderTypeInputLayout.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                tab_name = adapterView.getItemAtPosition(i).toString();
+                Utils.debugLog(tab_name);
+            }
+        });
     }
 
     /**
@@ -72,12 +86,16 @@ public class AddReminderActivity extends AppCompatActivity {
         Utils.debugLog("Saving item");
         Editable text = titleInputLayout.getEditText().getText();
 
-        Utils.debugLog(text);
+        Utils.debugLog("Item: " + text);
+        if (MOCK) {
+            reminderIO.putReminder(tab_name, text.toString(), new Date());
+        } else {
+            String item = String.format(Locale.ENGLISH,
+                    "{\"id\":\"0\",\"tab_name\":%s,\"title\":\"First reminder\",\"remindDate\":%s}",
+                    "IDEAS", new Date());
+            new RestAsync().sendData(item);
+        }
 //        String tab_name = (String) tabsFragmentAdapter.getPageTitle(viewPager.getCurrentItem());
-//        String item = String.format(Locale.ENGLISH,
-//                "{\"id\":\"0\",\"tab_name\":%s,\"title\":\"First reminder\",\"remindDate\":%d}",
-//                tab_name, new Date().getTime());
-//        new RestAsync().sendData(item);
         returnToMainActivity();
     }
 
