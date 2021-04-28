@@ -11,16 +11,23 @@ import java.util.List;
 import static com.qoobico.remindme.utils.Constants.DEBUG;
 
 public class Utils {
-    public static void debugLog(Object logMessage){
-        if (DEBUG){
+    public static void debugLog(Object logMessage) {
+        if (DEBUG) {
             System.out.println(logMessage);
         }
     }
 
-    public static List<RemindDTO> getReminders(Object jsonData){
+    public static List<RemindDTO> getReminders(Object jsonData) {
+        JSONArray jsonArray;
+
         List<RemindDTO> remindDTOS = new ArrayList<>();
         try {
-            JSONArray jsonArray = new JSONArray(jsonData);
+            if (jsonData instanceof String) {
+                jsonArray = new JSONArray((String)jsonData);
+            } else {
+                jsonArray = new JSONArray(jsonData);
+            }
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 remindDTOS.add(new RemindDTO(jsonArray.getJSONObject(i)));
             }

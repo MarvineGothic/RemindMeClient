@@ -51,6 +51,8 @@ public class Constants {
     public static final int[] HOLIDAYS = {4, R.layout.fragment_birthdays, R.string.menu_item_holidays};
     public static final int[][] TABS = {ALL_REMINDERS, IDEAS, TODO, BIRTHDAYS, HOLIDAYS};
 
+    public static final String REMINDERS_DIR = "reminders.json";
+
     public static class URL {
         public static final String HOST = "http://192.168.0.11:8080/";
         public static final String GET_REMIND_ITEM = HOST + "reminders";
