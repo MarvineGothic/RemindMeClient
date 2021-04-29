@@ -22,8 +22,10 @@ public class Utils {
 
         List<RemindDTO> remindDTOS = new ArrayList<>();
         try {
-            if (jsonData instanceof String) {
-                jsonArray = new JSONArray((String)jsonData);
+            if (jsonData instanceof JSONArray) {
+                jsonArray = (JSONArray) jsonData;
+            } else if (jsonData instanceof String) {
+                jsonArray = new JSONArray((String) jsonData);
             } else {
                 jsonArray = new JSONArray(jsonData);
             }

@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.qoobico.remindme.activity.AddReminderActivity;
+import com.qoobico.remindme.activity.SaveReminderActivity;
 import com.qoobico.remindme.dto.RemindDTO;
 
 import java.util.List;
@@ -83,7 +83,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
                     System.out.println("Click on: " + id.getText());
 //                    new RestAsync().deleteData(DELETE_REMIND_ITEM + id.getText());
 //                    reminderIO.deleteReminder(Long.parseLong(id.getText().toString()));
-                    Intent intent = new Intent(context, AddReminderActivity.class);
+                    Intent intent = new Intent(context, SaveReminderActivity.class);
                     ((AppCompatActivity) context).startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
                 }
             });

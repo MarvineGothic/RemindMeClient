@@ -52,6 +52,21 @@
                 android:hint="@string/reminder_type_input_label"
                 />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/date_picker_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
 </com.google.android.material.appbar.AppBarLayout>

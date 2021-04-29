@@ -15,6 +15,7 @@ public class Constants {
     public static final int REMIND_ITEM_LAYOUT = R.layout.remind_item;
 
     public static final int DRAWER_LAYOUT = R.id.drawer_layout;
+    public static final int DATE_INPUT = R.id.date_picker_actions;
     public static final int TITLE_INPUT = R.id.title_input;
     public static final int REMINDER_TYPE_INPUT = R.id.reminder_type_input;
 
@@ -51,7 +52,7 @@ public class Constants {
     public static final int[] HOLIDAYS = {4, R.layout.fragment_birthdays, R.string.menu_item_holidays};
     public static final int[][] TABS = {ALL_REMINDERS, IDEAS, TODO, BIRTHDAYS, HOLIDAYS};
 
-    public static final String REMINDERS_DIR = "reminders.json";
+    public static final String REMINDERS_DIR = "reminders";
 
     public static class URL {
         public static final String HOST = "http://192.168.0.11:8080/";

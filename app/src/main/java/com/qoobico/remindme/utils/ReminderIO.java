@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.qoobico.remindme.dto.RemindDTO;
 
-import java.io.File;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,59 +18,74 @@ import static com.qoobico.remindme.activity.MainActivity.tabsFragmentAdapter;
 
 public class ReminderIO extends FileIO {
 
+    private Long lastId;
     private String fileName;
 
-    public ReminderIO(Context context, String fileName) {
-        this.fileName = context.getFilesDir().getPath() + context.getPackageName() + "/" + fileName;
+    public ReminderIO(Context context, String remindersDir) {
+        this.fileName = context.getFilesDir().getPath() + context.getPackageName() + "/" + remindersDir + ".json";
     }
 
-    public void getData() {
-        tabsFragmentAdapter.setData(this.getRemindDTOs());
-    }
-
-    public List<RemindDTO> getRemindDTOs(){
-        String fileContents = this.readJsonData(this.fileName);
-        Utils.debugLog("Read file: " + fileContents);
-        return Utils.getReminders(fileContents);
-    }
-
-    public void putReminder(String tab_name, String title, Date date){
-        List<RemindDTO> remindDTOS = this.getRemindDTOs();
-        long maxId = 0;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            RemindDTO maxIdDto = remindDTOS.stream().max(Comparator.comparing(RemindDTO::getId)).orElseThrow(NoSuchElementException::new);
-            maxId = maxIdDto.getId();
-        } else {
-            for (RemindDTO remindDTO : remindDTOS) {
-                maxId = Math.max(maxId, remindDTO.getId());
-            }
+    public void getAllReminders() {
+        try {
+            tabsFragmentAdapter.setData(this.getRemindDTOs());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Utils.debugLog("Error when getting all reminders: " + e.getMessage());
         }
+    }
 
-        remindDTOS.add(new RemindDTO(maxId + 1, tab_name, title, date));
+    public void putReminder(String tab_name, String title, Date date) {
+        try {
+            List<RemindDTO> remindDTOS = this.getRemindDTOs();
+            JSONObject reminderJson = new JSONObject();
 
-        this.createAndSaveFile(this.fileName, remindDTOS.toString());
+            Long newId = lastId + 1;
+            remindDTOS.add(new RemindDTO(newId, tab_name, title, date));
 
-        tabsFragmentAdapter.setData(remindDTOS);
+            reminderJson.put("lastId", newId);
+            reminderJson.put("reminders", remindDTOS.toString());
+
+            Utils.debugLog("Composed JSON: " + reminderJson.toString());
+
+            this.createAndSaveFile(this.fileName, reminderJson.toString());
+
+            tabsFragmentAdapter.setData(remindDTOS);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Utils.debugLog("Error when put reminder: " + e.getMessage());
+        }
     }
 
     public void deleteReminder(long id){
-        List<RemindDTO> remindDTOS = this.getRemindDTOs();
+        try {
+            List<RemindDTO> remindDTOS = this.getRemindDTOs();
 
-        Iterator<RemindDTO> i = remindDTOS.iterator();
-        while (i.hasNext()) {
-            RemindDTO remindDTO = i.next();
+            Iterator<RemindDTO> i = remindDTOS.iterator();
+            while (i.hasNext()) {
+                RemindDTO remindDTO = i.next();
 
-            if (remindDTO.getId() == id) {
-                Utils.debugLog("Deleted Item " + remindDTO);
-                i.remove();
+                if (remindDTO.getId() == id) {
+                    Utils.debugLog("Deleted Item " + remindDTO);
+                    i.remove();
+                }
             }
+
+            Utils.debugLog("Saving Data to File " + remindDTOS);
+            this.createAndSaveFile(this.fileName, remindDTOS.toString());
+
+            tabsFragmentAdapter.setData(remindDTOS);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Utils.debugLog("Error when deleting reminder: " + e.getMessage());
         }
+    }
 
-        Utils.debugLog("Saving Data to File " + remindDTOS);
-        this.createAndSaveFile(this.fileName, remindDTOS.toString());
-
-        tabsFragmentAdapter.setData(remindDTOS);
+    private List<RemindDTO> getRemindDTOs() throws JSONException {
+        String fileContents = this.readJsonData(this.fileName);
+        Utils.debugLog("Read file: " + fileContents);
+        JSONObject fileJson = new JSONObject(fileContents);
+        lastId = fileJson.getLong("lastId");
+        return Utils.getReminders(fileJson.getString("reminders"));
     }
 
     public List<RemindDTO> getMockDTOs() {
