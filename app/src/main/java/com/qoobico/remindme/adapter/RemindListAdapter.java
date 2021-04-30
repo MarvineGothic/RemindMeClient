@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.qoobico.remindme.activity.SaveReminderActivity;
 import com.qoobico.remindme.dto.RemindDTO;
+import com.qoobico.remindme.utils.Utils;
 
 import java.util.List;
 
+import static com.qoobico.remindme.activity.MainActivity.reminderIO;
 import static com.qoobico.remindme.utils.Constants.ADD_REMINDER_ACTIVITY_CODE;
 import static com.qoobico.remindme.utils.Constants.CARD_VIEW_ID;
 import static com.qoobico.remindme.utils.Constants.REMINDER_DATE;
@@ -46,7 +48,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
     public void onBindViewHolder(@NonNull RemindViewHolder holder, int position) {
         RemindDTO remindDTO = data.get(position);
         holder.title.setText(remindDTO.getTitle());
-        holder.tab_name.setText(remindDTO.getTab_name().toUpperCase());
+        holder.tabName.setText(remindDTO.getTabName().toUpperCase());
         holder.id.setText(String.valueOf(remindDTO.getId()));
         holder.date.setText(String.valueOf(remindDTO.getRemindDate()));
     }
@@ -64,7 +66,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
 
         CardView cardView;
         TextView title;
-        TextView tab_name;
+        TextView tabName;
         TextView id;
         TextView date;
 
@@ -73,19 +75,26 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
 
             cardView = itemView.findViewById(CARD_VIEW_ID);
             title = itemView.findViewById(REMINDER_TITLE);
-            tab_name = itemView.findViewById(REMINDER_TYPE);
+            tabName = itemView.findViewById(REMINDER_TYPE);
             id = itemView.findViewById(REMINDER_ID);
             date = itemView.findViewById(REMINDER_DATE);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    System.out.println("Click on: " + id.getText());
+            itemView.setOnClickListener(view -> {
+                System.out.println("Click on: " + id.getText());
+                Intent intent = new Intent(context, SaveReminderActivity.class);
+                intent.putExtra("id", id.getText());
+                intent.putExtra("title", title.getText());
+                intent.putExtra("tabName", tabName.getText());
+                intent.putExtra("date", date.getText());
+                ((AppCompatActivity) context).startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
+            });
+
+            itemView.setOnLongClickListener(view -> {
+                // TODO: 30.04.2021 delete item
+                Utils.debugLog("Delete item");
 //                    new RestAsync().deleteData(DELETE_REMIND_ITEM + id.getText());
-//                    reminderIO.deleteReminder(Long.parseLong(id.getText().toString()));
-                    Intent intent = new Intent(context, SaveReminderActivity.class);
-                    ((AppCompatActivity) context).startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
-                }
+                    reminderIO.deleteReminder(Long.parseLong(id.getText().toString()));
+                return true;
             });
         }
     }

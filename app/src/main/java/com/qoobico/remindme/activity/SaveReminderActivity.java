@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.qoobico.remindme.rest_api.RestAsync;
 import com.qoobico.remindme.utils.Utils;
 
@@ -20,35 +18,54 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static com.qoobico.remindme.activity.MainActivity.reminderIO;
 import static com.qoobico.remindme.utils.Constants.*;
 
 public class SaveReminderActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    private TextInputLayout titleInputLayout;
+    private TextInputEditText reminderTitleInput;
     private AutoCompleteTextView reminderTypeInput;
     private TextInputEditText reminderDateInput;
-    private String tab_name;
+    private String id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(REMINDER_FORM_THEME);
         super.onCreate(savedInstanceState);
 
+        id = "0";
+        String title = "";
+        String tabName = "";
+        String date = "";
+
+        try {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                id = extras.getString("id");
+                title = extras.getString("title");
+                tabName = extras.getString("tabName");
+                date = extras.getString("date");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         setContentView(ACTIVITY_ADD_REMINDER_LAYOUT);
 
-        initReminderTitleField();
-        initReminderTypeField();
-        initReminderDatePickerField();
+        initReminderTitleField(title);
+        initReminderTypeField(tabName);
+        initReminderDatePickerField(date);
         initToolBar();
     }
 
-    private void initReminderTitleField() {
-        titleInputLayout = findViewById(TITLE_INPUT);
+    private void initReminderTitleField(String title) {
+        reminderTitleInput = findViewById(TITLE_INPUT);
+        reminderTitleInput.setText(title);
     }
 
-    private void initReminderTypeField() {
+    private void initReminderTypeField(String reminderType) {
         reminderTypeInput = findViewById(REMINDER_TYPE_INPUT);
         List<String> items = new ArrayList<>();
         for (int i = 1; i < TABS.length; i++) {
@@ -57,14 +74,11 @@ public class SaveReminderActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, REMINDER_TYPE_ITEM_LAYOUT, items);
 
         reminderTypeInput.setAdapter(adapter);
-        reminderTypeInput.setListSelection(1);
-//        reminderTypeInput.setOnItemClickListener((adapterView, view, i, l) -> {
-//            tab_name = adapterView.getItemAtPosition(i).toString();
-//            Utils.debugLog(tab_name);
-//        });
+        reminderType = reminderType.isEmpty() ? items.get(0) : reminderType;
+        reminderTypeInput.setText(reminderType, false);
     }
 
-    private void initReminderDatePickerField() {
+    private void initReminderDatePickerField(String date) {
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder
                 .datePicker()
                 .setTitleText("Select Date")
@@ -79,6 +93,7 @@ public class SaveReminderActivity extends AppCompatActivity {
         });
 
         datePicker.addOnPositiveButtonClickListener(selection -> reminderDateInput.setText(datePicker.getHeaderText()));
+        reminderDateInput.setText(date);
     }
 
     private void initToolBar() {
@@ -103,17 +118,20 @@ public class SaveReminderActivity extends AppCompatActivity {
     private void saveReminderItem() {
         Utils.debugLog("Saving item");
         try {
-            EditText editText = titleInputLayout.getEditText();
-            String text = editText == null ? "" : String.valueOf(editText.getText());
-            String tab_name = String.valueOf(reminderTypeInput.getText());
+            String title = Objects.requireNonNull(reminderTitleInput.getText()).toString();
+            String tabName = String.valueOf(reminderTypeInput.getText());
             Date date = new Date(String.valueOf(reminderDateInput.getText()));
 
             if (MOCK) {
-                reminderIO.putReminder(tab_name, text, date);
+                if (id != null) {
+                    reminderIO.patchReminder(id, tabName, title, date);
+                } else {
+                    reminderIO.putReminder(tabName, title, date);
+                }
             } else {
                 String item = String.format(Locale.ENGLISH,
                         "{\"id\":\"0\",\"tab_name\":%s,\"title\":%s,\"remindDate\":%s}",
-                        tab_name, text, date.getTime());
+                        tabName, title, date.getTime());
                 new RestAsync().sendData(item);
             }
 

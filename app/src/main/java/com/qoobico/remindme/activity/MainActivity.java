@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(FAB_ID);
         fab.setOnClickListener(view -> {
             Utils.debugLog("Open add activity reminder");
-            /*new RestAsync().sendData("{\"id\":" + id + ",\"title\":\"First reminder" + id + "\",\"remindDate\":1568035941094}");
-            id++;*/
             Intent intent = new Intent(MainActivity.this, SaveReminderActivity.class);
             startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
         });

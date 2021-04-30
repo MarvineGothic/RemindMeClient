@@ -16,7 +16,7 @@ public class Constants {
 
     public static final int DRAWER_LAYOUT = R.id.drawer_layout;
     public static final int DATE_INPUT = R.id.date_picker_actions;
-    public static final int TITLE_INPUT = R.id.title_input;
+    public static final int TITLE_INPUT  = R.id.title_input_edit_text;
     public static final int REMINDER_TYPE_INPUT = R.id.reminder_type_input;
 
     public static final int TOOL_BAR_ID = R.id.toolbar;
