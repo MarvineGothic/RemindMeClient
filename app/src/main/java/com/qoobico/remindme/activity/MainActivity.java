@@ -2,10 +2,7 @@ package com.qoobico.remindme.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,24 +16,27 @@ import com.google.android.material.tabs.TabLayout;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
 import com.qoobico.remindme.rest_api.RestAsync;
+import com.qoobico.remindme.utils.ReminderIO;
+import com.qoobico.remindme.utils.Utils;
 
 import static com.qoobico.remindme.utils.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
     public static TabsFragmentAdapter tabsFragmentAdapter;
+    public static ReminderIO reminderIO;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
 
-    private int id = 1;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(DEFAULT_STYLE);
+        setTheme(DEFAULT_THEME);
         super.onCreate(savedInstanceState);
 
         setContentView(ACTIVITY_MAIN_LAYOUT);
+
+        reminderIO = new ReminderIO(this, REMINDERS_DIR);
 
         initToolBar();
         initNavigationView();
@@ -47,11 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private void initToolBar() {
         toolbar = findViewById(TOOL_BAR_ID);
         toolbar.setTitle(APP_NAME);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return false;
-            }
+        toolbar.setOnMenuItemClickListener(item -> {
+            Utils.debugLog("Clicked menu Item");
+            return false;
         });
         toolbar.inflateMenu(MENU);
     }
@@ -65,56 +63,53 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationView navigationView = findViewById(NAVIGATION_ID);
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        drawerLayout.closeDrawers();
-                        switch (menuItem.getItemId()) {
-                            case R.id.actionNotificationItem:
-                                showNotificationTab();
-                                break;
-                            case R.id.actionBookmarksItem:
-                                showBookmarksTab();
-                                break;
-                            case R.id.actionHistoryItem:
-                                showHistoryTab();
-                                break;
-                            case R.id.actionSettingsItem:
-                                showSettingsTab();
-                                break;
-                            case R.id.actionAboutItem:
-                                showAboutTab();
-                                break;
-                        }
-                        return false;
+                menuItem -> {
+                    drawerLayout.closeDrawers();
+                    switch (menuItem.getItemId()) {
+                        case R.id.actionNotificationItem:
+                            showNotificationTab();
+                            break;
+                        case R.id.actionBookmarksItem:
+                            showBookmarksTab();
+                            break;
+                        case R.id.actionHistoryItem:
+                            showHistoryTab();
+                            break;
+                        case R.id.actionSettingsItem:
+                            showSettingsTab();
+                            break;
+                        case R.id.actionAboutItem:
+                            showAboutTab();
+                            break;
                     }
+                    return false;
                 });
     }
 
     private void initFloatingActionButton() {
         FloatingActionButton fab = findViewById(FAB_ID);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*new RestAsync().sendData("{\"id\":" + id + ",\"title\":\"First reminder" + id + "\",\"remindDate\":1568035941094}");
-                id++;*/
-                Intent intent = new Intent(MainActivity.this, AddReminderActivity.class);
-                startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
-            }
+        fab.setOnClickListener(view -> {
+            Utils.debugLog("Open add activity reminder");
+            Intent intent = new Intent(MainActivity.this, SaveReminderActivity.class);
+            startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
         });
     }
 
     private void initTabs() {
         viewPager = findViewById(VIEW_PAGER_ID);
-        tabsFragmentAdapter = new TabsFragmentAdapter(this, getSupportFragmentManager()).
-                initTabsMap(ALL_REMINDERS, IDEAS, TODO, BIRTHDAYS);
+        tabsFragmentAdapter = new TabsFragmentAdapter(MainActivity.this, getSupportFragmentManager()).
+                initTabsMap(TABS);
         viewPager.setAdapter(tabsFragmentAdapter);
 
-        new RestAsync().getData();
+        if (MOCK) {
+            reminderIO.getAllReminders();
+        } else {
+            new RestAsync().getData();
+        }
 
         TabLayout tabLayout = findViewById(TAB_LAYOUT_ID);
         tabLayout.setupWithViewPager(viewPager);
-
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private void showNotificationTab() {

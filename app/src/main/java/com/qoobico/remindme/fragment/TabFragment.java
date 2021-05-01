@@ -32,7 +32,7 @@ public class TabFragment extends Fragment {
     public TabFragment(Context context, int[] fragment_data, List<RemindDTO> data) {
         Bundle args = new Bundle();
 
-        remindListAdapter = new RemindListAdapter(data);
+        remindListAdapter = new RemindListAdapter(data, context);
         this.setArguments(args);
         this.context = context;
         this.tabLayout = fragment_data[1];
@@ -59,12 +59,12 @@ public class TabFragment extends Fragment {
     public void refreshData(List<RemindDTO> data) {
 
         List<RemindDTO> current_data = new ArrayList<>();
-        String tab_name = this.getTabTitle().toUpperCase();
-        if (tab_name.equals("ALL")) {
+        String tabName = this.getTabTitle().toUpperCase();
+        if (tabName.equals("ALL")) {
             current_data = data;
         } else
             for (int i = 0; i < data.size(); i++) {
-                if (data.get(i).getTab_name().toUpperCase().equals(tab_name)) {
+                if (data.get(i).getTabName().toUpperCase().equals(tabName)) {
                     current_data.add(data.get(i));
                 }
             }
