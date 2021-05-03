@@ -11,16 +11,15 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
-import com.qoobico.remindme.rest_api.RestAsync;
+import com.qoobico.remindme.manager.ReminderManager;
 import com.qoobico.remindme.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
-import static com.qoobico.remindme.activity.MainActivity.reminderIO;
+import static com.qoobico.remindme.activity.MainActivity.reminderTypes;
 import static com.qoobico.remindme.utils.Constants.*;
 
 public class SaveReminderActivity extends AppCompatActivity {
@@ -35,7 +34,7 @@ public class SaveReminderActivity extends AppCompatActivity {
         setTheme(REMINDER_FORM_THEME);
         super.onCreate(savedInstanceState);
 
-        id = "0";
+        id = null;
         String title = "";
         String tabName = "";
         String date = "";
@@ -67,14 +66,11 @@ public class SaveReminderActivity extends AppCompatActivity {
 
     private void initReminderTypeField(String reminderType) {
         reminderTypeInput = findViewById(REMINDER_TYPE_INPUT);
-        List<String> items = new ArrayList<>();
-        for (int i = 1; i < TABS.length; i++) {
-            items.add(this.getString(TABS[i][2]));
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, REMINDER_TYPE_ITEM_LAYOUT, items);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, REMINDER_TYPE_ITEM_LAYOUT, reminderTypes);
 
         reminderTypeInput.setAdapter(adapter);
-        reminderType = reminderType.isEmpty() ? items.get(0) : reminderType;
+        reminderType = reminderType.isEmpty() ? reminderTypes.get(0) : reminderType;
         reminderTypeInput.setText(reminderType, false);
     }
 
@@ -116,23 +112,13 @@ public class SaveReminderActivity extends AppCompatActivity {
      * Adds a new reminder to DB
      */
     private void saveReminderItem() {
-        Utils.debugLog("Saving item");
         try {
             String title = Objects.requireNonNull(reminderTitleInput.getText()).toString();
             String tabName = String.valueOf(reminderTypeInput.getText());
             Date date = new Date(String.valueOf(reminderDateInput.getText()));
 
-            if (MOCK) {
-                if (id != null) {
-                    reminderIO.patchReminder(id, tabName, title, date);
-                } else {
-                    reminderIO.putReminder(tabName, title, date);
-                }
-            } else {
-                String item = String.format(Locale.ENGLISH,
-                        "{\"id\":\"0\",\"tab_name\":%s,\"title\":%s,\"remindDate\":%s}",
-                        tabName, title, date.getTime());
-                new RestAsync().sendData(item);
+            if (reminderTypes.contains(tabName)) {
+                ReminderManager.saveReminder(id, tabName, title, date);
             }
 
             returnToMainActivity();

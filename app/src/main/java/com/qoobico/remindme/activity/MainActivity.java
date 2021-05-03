@@ -15,16 +15,38 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
-import com.qoobico.remindme.rest_api.RestAsync;
+import com.qoobico.remindme.manager.ReminderManager;
 import com.qoobico.remindme.utils.ReminderIO;
 import com.qoobico.remindme.utils.Utils;
 
-import static com.qoobico.remindme.utils.Constants.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.qoobico.remindme.utils.Constants.ACTIVITY_MAIN_LAYOUT;
+import static com.qoobico.remindme.utils.Constants.ADD_REMINDER_ACTIVITY_CODE;
+import static com.qoobico.remindme.utils.Constants.ALL_REMINDERS;
+import static com.qoobico.remindme.utils.Constants.APP_NAME;
+import static com.qoobico.remindme.utils.Constants.BIRTHDAYS;
+import static com.qoobico.remindme.utils.Constants.DEFAULT_THEME;
+import static com.qoobico.remindme.utils.Constants.DRAWER_LAYOUT;
+import static com.qoobico.remindme.utils.Constants.FAB_ID;
+import static com.qoobico.remindme.utils.Constants.IDEAS;
+import static com.qoobico.remindme.utils.Constants.MENU;
+import static com.qoobico.remindme.utils.Constants.NAVIGATION_ID;
+import static com.qoobico.remindme.utils.Constants.NAV_CLOSE;
+import static com.qoobico.remindme.utils.Constants.NAV_OPEN;
+import static com.qoobico.remindme.utils.Constants.REMINDERS_DIR;
+import static com.qoobico.remindme.utils.Constants.TABS;
+import static com.qoobico.remindme.utils.Constants.TAB_LAYOUT_ID;
+import static com.qoobico.remindme.utils.Constants.TODO;
+import static com.qoobico.remindme.utils.Constants.TOOL_BAR_ID;
+import static com.qoobico.remindme.utils.Constants.VIEW_PAGER_ID;
 
 public class MainActivity extends AppCompatActivity {
 
     public static TabsFragmentAdapter tabsFragmentAdapter;
     public static ReminderIO reminderIO;
+    public static List<String> reminderTypes;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
@@ -42,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         initNavigationView();
         initFloatingActionButton();
         initTabs();
+        initReminderTypes();
     }
 
     private void initToolBar() {
@@ -101,15 +124,19 @@ public class MainActivity extends AppCompatActivity {
                 initTabsMap(TABS);
         viewPager.setAdapter(tabsFragmentAdapter);
 
-        if (MOCK) {
-            reminderIO.getAllReminders();
-        } else {
-            new RestAsync().getData();
-        }
+        ReminderManager.getAllReminders();
 
         TabLayout tabLayout = findViewById(TAB_LAYOUT_ID);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+    }
+
+    public void initReminderTypes() {
+        List<String> items = new ArrayList<>();
+        for (int i = 1; i < TABS.length; i++) {
+            items.add(this.getString(TABS[i][2]));
+        }
+        reminderTypes = items;
     }
 
     private void showNotificationTab() {

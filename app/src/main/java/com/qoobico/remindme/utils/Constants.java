@@ -45,6 +45,10 @@ public class Constants {
     public static final int NAV_OPEN = R.string.view_navigation_open;
     public static final int NAV_CLOSE = R.string.view_navigation_close;
 
+    public static final int DIALOG_CANCEL = R.string.dialog_neutral;
+    public static final int DIALOG_DELETE = R.string.dialog_negative;
+    public static final int DIALOG_EDIT = R.string.dialog_positive;
+
     public static final int[] ALL_REMINDERS = {0, R.layout.fragment_all, R.string.menu_item_all};
     public static final int[] IDEAS = {1, R.layout.fragment_ideas, R.string.menu_item_ideas};
     public static final int[] TODO = {2, R.layout.fragment_todo, R.string.menu_item_todo};

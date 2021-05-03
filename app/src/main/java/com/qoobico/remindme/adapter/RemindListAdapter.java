@@ -2,6 +2,7 @@ package com.qoobico.remindme.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.qoobico.remindme.R;
 import com.qoobico.remindme.activity.SaveReminderActivity;
 import com.qoobico.remindme.dto.RemindDTO;
-import com.qoobico.remindme.utils.Utils;
+import com.qoobico.remindme.manager.ReminderManager;
 
 import java.util.List;
 
-import static com.qoobico.remindme.activity.MainActivity.reminderIO;
-import static com.qoobico.remindme.utils.Constants.ADD_REMINDER_ACTIVITY_CODE;
-import static com.qoobico.remindme.utils.Constants.CARD_VIEW_ID;
-import static com.qoobico.remindme.utils.Constants.REMINDER_DATE;
-import static com.qoobico.remindme.utils.Constants.REMINDER_ID;
-import static com.qoobico.remindme.utils.Constants.REMINDER_TITLE;
-import static com.qoobico.remindme.utils.Constants.REMINDER_TYPE;
-import static com.qoobico.remindme.utils.Constants.REMIND_ITEM_LAYOUT;
+import static com.qoobico.remindme.utils.Constants.*;
 
 public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.RemindViewHolder> {
 
@@ -79,21 +75,34 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
             id = itemView.findViewById(REMINDER_ID);
             date = itemView.findViewById(REMINDER_DATE);
 
-            itemView.setOnClickListener(view -> {
-                System.out.println("Click on: " + id.getText());
-                Intent intent = new Intent(context, SaveReminderActivity.class);
-                intent.putExtra("id", id.getText());
-                intent.putExtra("title", title.getText());
-                intent.putExtra("tabName", tabName.getText());
-                intent.putExtra("date", date.getText());
-                ((AppCompatActivity) context).startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
-            });
-
             itemView.setOnLongClickListener(view -> {
-                // TODO: 30.04.2021 delete item
-                Utils.debugLog("Delete item");
-//                    new RestAsync().deleteData(DELETE_REMIND_ITEM + id.getText());
-                    reminderIO.deleteReminder(Long.parseLong(id.getText().toString()));
+                new MaterialAlertDialogBuilder(new ContextThemeWrapper(context, R.style.AppTheme2))
+                        .setTitle("Reminder")
+                        .setMessage("Edit reminder")
+                        .setNeutralButton(DIALOG_CANCEL, (dialogInterface, i) -> {
+
+                        })
+                        .setNegativeButton(DIALOG_DELETE, (dialogInterface, i) ->
+                                new MaterialAlertDialogBuilder(new ContextThemeWrapper(context, R.style.AppTheme2))
+                                        .setTitle("You're about to delete this reminder")
+                                        .setMessage("Delete anyway?")
+                                        .setNeutralButton(DIALOG_CANCEL, (deleteDialogInterface, j) -> {
+
+                                        })
+                                        .setPositiveButton(DIALOG_DELETE, (deleteDialogInterface, j) -> {
+                                            ReminderManager.deleteReminder(id.getText().toString());
+                                        })
+                                        .show())
+                        .setPositiveButton(DIALOG_EDIT, (dialogInterface, i) -> {
+                            System.out.println("Click on: " + id.getText());
+                            Intent intent = new Intent(context, SaveReminderActivity.class);
+                            intent.putExtra("id", id.getText());
+                            intent.putExtra("title", title.getText());
+                            intent.putExtra("tabName", tabName.getText());
+                            intent.putExtra("date", date.getText());
+                            ((AppCompatActivity) context).startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
+                        })
+                        .show();
                 return true;
             });
         }
