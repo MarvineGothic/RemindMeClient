@@ -14,11 +14,7 @@ public class RemindDTO {
     private String tabName;
     private String title;
     private Date remindDate;
-
-
-    public RemindDTO() {
-
-    }
+    private JSONObject jsonObject = new JSONObject();
 
     public RemindDTO(JSONObject jsonObject) {
         Utils.debugLog("new DTO");
@@ -39,6 +35,7 @@ public class RemindDTO {
     }
 
     private void initFields(JSONObject jsonObject) {
+        this.jsonObject = jsonObject;
         try {
             this.id = jsonObject.getInt("id");
             this.tabName = jsonObject.getString("tab_name");
@@ -83,7 +80,6 @@ public class RemindDTO {
 
     @NonNull
     public String toString() {
-        JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", this.getId());
             jsonObject.put("tab_name", this.getTabName());

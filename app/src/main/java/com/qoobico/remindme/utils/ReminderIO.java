@@ -92,20 +92,19 @@ public class ReminderIO extends FileIO {
         }
     }
 
-    private RemindDTO deleteRemindDTO(Long reminderId, List<RemindDTO> remindDTOs) {
+    private void deleteRemindDTO(Long reminderId, List<RemindDTO> remindDTOs) {
         Iterator<RemindDTO> i = remindDTOs.iterator();
-        RemindDTO deletedReminder = new RemindDTO();
+
         while (i.hasNext()) {
             RemindDTO remindDTO = i.next();
 
             if (remindDTO.getId() == reminderId) {
                 Utils.debugLog("Deleted Item " + remindDTO);
-                deletedReminder = remindDTO;
+
                 i.remove();
             }
         }
 
-        return deletedReminder;
     }
 
     private String composeReminderJSON(List<RemindDTO> remindDTOS) throws JSONException {
