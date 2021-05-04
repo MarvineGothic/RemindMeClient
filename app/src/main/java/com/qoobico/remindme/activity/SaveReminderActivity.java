@@ -159,7 +159,6 @@ public class SaveReminderActivity extends AppCompatActivity {
         intent.putExtra("message", message);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
         Objects.requireNonNull(alarmManager).setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10, pendingIntent);
     }
 
     private void cancelAlarm(){

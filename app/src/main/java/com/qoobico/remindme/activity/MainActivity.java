@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
-    private NotificationHelper notificationHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(ACTIVITY_MAIN_LAYOUT);
 
         reminderIO = new ReminderIO(this, REMINDERS_DIR);
-        notificationHelper = new NotificationHelper(this);
 
         initToolBar();
         initNavigationView();
