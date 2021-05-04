@@ -1,9 +1,13 @@
 package com.qoobico.remindme.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,12 +15,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
+import com.qoobico.remindme.notifications.AlertReceiver;
 import com.qoobico.remindme.manager.ReminderManager;
 import com.qoobico.remindme.utils.Utils;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import static com.qoobico.remindme.activity.MainActivity.reminderTypes;
@@ -119,6 +123,17 @@ public class SaveReminderActivity extends AppCompatActivity {
 
             if (reminderTypes.contains(tabName)) {
                 ReminderManager.saveReminder(id, tabName, title, date);
+                Utils.debugLog("DatePicker setDate");
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, date.getYear());
+                calendar.set(Calendar.MONTH, date.getMonth());
+                calendar.set(Calendar.DAY_OF_MONTH, date.getDay());
+                calendar.set(Calendar.HOUR_OF_DAY, 19);
+                calendar.set(Calendar.MINUTE, 27);
+                calendar.set(Calendar.SECOND, 0);
+
+                startAlarm(calendar, tabName, title);
             }
 
             returnToMainActivity();
@@ -134,5 +149,22 @@ public class SaveReminderActivity extends AppCompatActivity {
     private void returnToMainActivity() {
         Intent intent = new Intent(SaveReminderActivity.this, MainActivity.class);
         startActivityForResult(intent, MAIN_ACTIVITY_CODE);
+    }
+
+    private void startAlarm(Calendar calendar, String title, String message){
+        Utils.debugLog("DatePicker start Alarm");
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        intent.putExtra("title", title);
+        intent.putExtra("message", message);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+        Objects.requireNonNull(alarmManager).setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void cancelAlarm(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+        alarmManager.cancel(pendingIntent);
     }
 }
