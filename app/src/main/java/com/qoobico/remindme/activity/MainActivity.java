@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.qoobico.remindme.R;
 import com.qoobico.remindme.adapter.TabsFragmentAdapter;
 import com.qoobico.remindme.manager.ReminderManager;
+import com.qoobico.remindme.notifications.NotificationHelper;
 import com.qoobico.remindme.utils.ReminderIO;
 import com.qoobico.remindme.utils.Utils;
 
@@ -38,7 +39,6 @@ import static com.qoobico.remindme.utils.Constants.NAV_OPEN;
 import static com.qoobico.remindme.utils.Constants.REMINDERS_DIR;
 import static com.qoobico.remindme.utils.Constants.TABS;
 import static com.qoobico.remindme.utils.Constants.TAB_LAYOUT_ID;
-import static com.qoobico.remindme.utils.Constants.TODO;
 import static com.qoobico.remindme.utils.Constants.TOOL_BAR_ID;
 import static com.qoobico.remindme.utils.Constants.VIEW_PAGER_ID;
 
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ViewPager viewPager;
+    private NotificationHelper notificationHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(ACTIVITY_MAIN_LAYOUT);
 
         reminderIO = new ReminderIO(this, REMINDERS_DIR);
+        notificationHelper = new NotificationHelper(this);
 
         initToolBar();
         initNavigationView();
@@ -140,11 +142,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotificationTab() {
-        viewPager.setCurrentItem(ALL_REMINDERS[0]);
+
     }
 
     private void showBookmarksTab() {
-        viewPager.setCurrentItem(TODO[0]);
+
     }
 
     private void showHistoryTab() {

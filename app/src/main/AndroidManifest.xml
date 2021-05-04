@@ -3,6 +3,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -18,5 +20,9 @@
         </activity>
         <activity android:name=".activity.SaveReminderActivity">
         </activity>
+
+        <service android:name=".notifications.ReminderJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <receiver android:name=".notifications.AlertReceiver"/>
     </application>
 </manifest>
