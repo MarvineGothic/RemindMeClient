@@ -75,7 +75,7 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
             id = itemView.findViewById(REMINDER_ID);
             date = itemView.findViewById(REMINDER_DATE);
 
-            itemView.setOnLongClickListener(view -> {
+            itemView.setOnClickListener(view -> {
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(context, R.style.AppTheme2))
                         .setTitle("Reminder")
                         .setMessage("Edit reminder")
@@ -103,7 +103,6 @@ public class RemindListAdapter extends RecyclerView.Adapter<RemindListAdapter.Re
                             ((AppCompatActivity) context).startActivityForResult(intent, ADD_REMINDER_ACTIVITY_CODE);
                         })
                         .show();
-                return true;
             });
         }
     }

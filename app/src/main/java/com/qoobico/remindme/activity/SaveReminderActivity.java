@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.DatePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,16 +14,26 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
-import com.qoobico.remindme.notifications.AlertReceiver;
 import com.qoobico.remindme.manager.ReminderManager;
+import com.qoobico.remindme.notifications.AlertReceiver;
 import com.qoobico.remindme.utils.Utils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
 import static com.qoobico.remindme.activity.MainActivity.reminderTypes;
-import static com.qoobico.remindme.utils.Constants.*;
+import static com.qoobico.remindme.utils.Constants.ACTIVITY_ADD_REMINDER_LAYOUT;
+import static com.qoobico.remindme.utils.Constants.ADD_REMINDER_NAME;
+import static com.qoobico.remindme.utils.Constants.CHECK_ID;
+import static com.qoobico.remindme.utils.Constants.CLOSE_ID;
+import static com.qoobico.remindme.utils.Constants.DATE_INPUT;
+import static com.qoobico.remindme.utils.Constants.MAIN_ACTIVITY_CODE;
+import static com.qoobico.remindme.utils.Constants.MENU_ADD_REMINDER;
+import static com.qoobico.remindme.utils.Constants.REMINDER_FORM_THEME;
+import static com.qoobico.remindme.utils.Constants.REMINDER_TYPE_INPUT;
+import static com.qoobico.remindme.utils.Constants.REMINDER_TYPE_ITEM_LAYOUT;
+import static com.qoobico.remindme.utils.Constants.TITLE_INPUT;
+import static com.qoobico.remindme.utils.Constants.TOOL_BAR_ID;
 
 public class SaveReminderActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -87,6 +96,11 @@ public class SaveReminderActivity extends AppCompatActivity {
 
         reminderDateInput = findViewById(DATE_INPUT);
 
+        reminderDateInput.setOnEditorActionListener((textView, i, keyEvent) -> {
+            Utils.debugLog("click on date picker");
+            datePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+            return false;
+        });
         reminderDateInput.setOnClickListener(view -> {
             Utils.debugLog("click on date picker");
             datePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
@@ -125,15 +139,7 @@ public class SaveReminderActivity extends AppCompatActivity {
                 ReminderManager.saveReminder(id, tabName, title, date);
                 Utils.debugLog("DatePicker setDate");
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, date.getYear());
-                calendar.set(Calendar.MONTH, date.getMonth());
-                calendar.set(Calendar.DAY_OF_MONTH, date.getDay());
-                calendar.set(Calendar.HOUR_OF_DAY, 19);
-                calendar.set(Calendar.MINUTE, 27);
-                calendar.set(Calendar.SECOND, 0);
-
-                startAlarm(calendar, tabName, title);
+                startAlarm(date, tabName, title);
             }
 
             returnToMainActivity();
@@ -151,17 +157,17 @@ public class SaveReminderActivity extends AppCompatActivity {
         startActivityForResult(intent, MAIN_ACTIVITY_CODE);
     }
 
-    private void startAlarm(Calendar calendar, String title, String message){
+    private void startAlarm(Date dateTime, String title, String message) {
         Utils.debugLog("DatePicker start Alarm");
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
         intent.putExtra("title", title);
         intent.putExtra("message", message);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
-        Objects.requireNonNull(alarmManager).setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Objects.requireNonNull(alarmManager).setExact(AlarmManager.RTC_WAKEUP, dateTime.getTime(), pendingIntent);
     }
 
-    private void cancelAlarm(){
+    private void cancelAlarm() {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
